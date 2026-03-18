@@ -1,18 +1,20 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { Button,  } from "@chakra-ui/react";
+import { Button } from "@chakra-ui/react";
 
 const Chats = () => {
-  const [chat, setChat] = useState([]);
+  const [chats, setChats] = useState([]);
 
-  async function fetchhat() {
+  async function fetChats() {
     const response = await axios.get("http://localhost:5000/");
     console.log(response.data);
+    setChats(response.data);
   }
 
   useEffect(() => {
-    fetchhat();
+    fetChats();
   }, []);
+
   return (
     <div>
       Chats<Button>Click me</Button>
