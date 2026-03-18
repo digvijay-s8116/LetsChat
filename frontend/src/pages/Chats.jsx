@@ -16,9 +16,6 @@ const Chats = () => {
   return (
     <div>
       Chats<Button>Click me</Button>
-      {/* <Button colorPalette={colorPalettes.teal} variant="surface">
-        Button
-      </Button> */}
     </div>
   );
 };
