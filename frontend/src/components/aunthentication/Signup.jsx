@@ -24,11 +24,11 @@ const Signup = () => {
         ></Input>
       </Field.Root>
 
-      <Field.Root id="" required>
+      <Field.Root id="email" required>
         <Field.Label>Email</Field.Label>
         <Input
           placeholder="Enter Your email"
-          onChange={(e) => setName(e.target.value)}
+          onChange={(e) => setEmail(e.target.value)}
         ></Input>
       </Field.Root>
 
@@ -78,7 +78,7 @@ const Signup = () => {
       </Field.Root>
 
       <Button
-        colorScheme="blue"
+        colorPalette="blue"
         width="100%"
         style={{ marginTop: 15 }}
         onClick={submitHandler}
