@@ -1,4 +1,6 @@
 import { Input, VStack, Field, InputGroup, Button } from "@chakra-ui/react";
+import { Toaster, toaster } from "../ui/toaster";
+
 import { useState } from "react";
 
 const Signup = () => {
@@ -10,7 +12,20 @@ const Signup = () => {
   const [show, setShow] = useState(false);
   const [show2, setShow2] = useState(false);
 
-  function postDetails(pics) {}
+  const [loading, setLoading] = useState(false);
+
+  function postDetails(pics) {
+    setLoading(true);
+    if (pic === undefined) {
+      toaster.create({
+        title: "Image missing",
+        description: "Please upload a profile picture",
+        type: "warning",
+        duration: 3000,
+      });
+    }
+    rr1u7dDTPQEpglXv02srpTDYMOk;
+  }
 
   function submitHandler() {}
 
