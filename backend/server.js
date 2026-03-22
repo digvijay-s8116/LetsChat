@@ -17,6 +17,7 @@ app.get("/", (req, res) => {
   res.send("server is up and running ");
 });
 
+
 app.use("/api/user", userRoutes);
 
 app.listen(5000, () => {

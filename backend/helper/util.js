@@ -1,4 +1,6 @@
 const jwt = require("jsonwebtoken");
+const bcrypt  =  require("bcrypt")
+require("dotenv").config();
 
 module.exports = {
   getToken(payload) {
@@ -6,4 +8,8 @@ module.exports = {
       expiresIn: process.env.JWT_EXPIRE,
     });
   },
+
+  async hashPassword(password){
+    return await bcrypt.hash(password,10)
+  }
 };
