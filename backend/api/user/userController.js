@@ -35,7 +35,7 @@ module.exports = {
         console.log("user created success", newUser);
         return res.status(200).json({
           response: {
-            _id: newUser._id,
+            // _id: newUser._id,
             name: newUser.name,
             email: newUser.email,
             pic: newUser.pic,

@@ -2,8 +2,9 @@ import { Input, VStack, Field, InputGroup, Button } from "@chakra-ui/react";
 import { toaster } from "../../ui/toaster";
 import axios from "axios";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 const BASE_URL = import.meta.env.VITE_API_BASE_URL;
-console.log("ASdfsdfsadf", BASE_URL);
+// console.log("ASdfsdfsadf", BASE_URL);
 
 const Signup = () => {
   const [name, setName] = useState();
@@ -13,6 +14,8 @@ const Signup = () => {
   const [pic, setPic] = useState();
   const [show, setShow] = useState(false);
   const [show2, setShow2] = useState(false);
+
+  const navigate = useNavigate();
 
   // this is used to create a loading at the time of image upload  in the signup button
   const [loading, setLoading] = useState(false);
@@ -95,27 +98,34 @@ const Signup = () => {
         confirmpassword,
       };
 
+      // give a config
       let config = {
         headers: {
           "Content-Type": "application/json",
         },
       };
+
       let response = await axios.post(
         `${BASE_URL}/api/user/register`,
         data,
         config,
       );
+
       // This ONLY runs if the backend sends a 200 Success status
-      console.log(response);
+      console.log(response.data.response);
       toaster.create({
-        title: "user Created successfully",
+        title: "Registration successfully",
         type: "success",
         duration: 3000,
       });
+
+      localStorage.setItem("userInfo", JSON.stringify(response.data.response));
+
       setLoading(false);
+
+      navigate("/chats");
     } catch (error) {
-      // console.log(error);
-      console.log(error.response.data.responseMessage);
+      console.log(error);
 
       if (error.response && error.response.data.responseMessage) {
         toaster.create({
@@ -131,6 +141,7 @@ const Signup = () => {
           type: "error",
           duration: 3000,
         });
+        setLoading(false);
       }
     }
   }
