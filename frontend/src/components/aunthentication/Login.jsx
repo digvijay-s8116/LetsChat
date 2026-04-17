@@ -74,12 +74,14 @@ const Login = () => {
       }
     }
   }
+
   return (
     <VStack spacing="5px" color="black">
       <Field.Root id="email" required>
         <Field.Label>Email</Field.Label>
         <Input
           placeholder="Enter Your email"
+          value = {email}
           onChange={(e) => setEmail(e.target.value)}
         ></Input>
       </Field.Root>
@@ -96,6 +98,7 @@ const Login = () => {
           <Input
             type={show ? "text" : "password"}
             placeholder="Enter Your password"
+            value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
         </InputGroup>
