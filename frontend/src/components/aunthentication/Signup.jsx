@@ -1,8 +1,9 @@
 import { Input, VStack, Field, InputGroup, Button } from "@chakra-ui/react";
 import { toaster } from "../../ui/toaster";
 import axios from "axios";
-
 import { useState } from "react";
+const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+console.log("ASdfsdfsadf", BASE_URL);
 
 const Signup = () => {
   const [name, setName] = useState();
@@ -64,12 +65,11 @@ const Signup = () => {
 
   async function submitHandler() {
     setLoading(true);
-    console.log(name, email, password, confirmpassword);
     if (!name || !email || !password || !confirmpassword) {
       console.log("here");
       toaster.create({
         title: "Please fill all the fields",
-        status: "warning",
+        type: "warning",
         duration: 3000,
       });
 
@@ -77,30 +77,62 @@ const Signup = () => {
       return;
     }
 
-    // if (password !== confirmpassword) {
-    //   toaster.create({
-    //     title: "password and confirm password did not matched",
-    //     type: "warning",
-    //     duration: 3000,
-    //   });
-    //   setLoading(false);
-    //   return;
-    // }
+    if (password !== confirmpassword) {
+      toaster.create({
+        title: "password and confirm password did not matched",
+        type: "warning",
+        duration: 3000,
+      });
+      setLoading(false);
+      return;
+    }
 
-    // try {
-    //   let data = {
-    //     name,
-    //     email,
-    //     password,
-    //     confirmpassword,
-    //   };
-    //   let response = await axios.post("/api/user/register", { data });
-    //   console.log(response);
-    //   setLoading(false);
-    // } catch (error) {
-    //   console.log(error.message);
-    //   setLoading(false);
-    // }
+    try {
+      let data = {
+        name,
+        email,
+        password,
+        confirmpassword,
+      };
+
+      let config = {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      };
+      let response = await axios.post(
+        `${BASE_URL}/api/user/register`,
+        data,
+        config,
+      );
+      // This ONLY runs if the backend sends a 200 Success status
+      console.log(response);
+      toaster.create({
+        title: "user Created successfully",
+        type: "success",
+        duration: 3000,
+      });
+      setLoading(false);
+    } catch (error) {
+      // console.log(error);
+      console.log(error.response.data.responseMessage);
+
+      if (error.response && error.response.data.responseMessage) {
+        toaster.create({
+          title: error.response.data.responseMessage,
+          type: "warning",
+          duration: 3000,
+        });
+        setLoading(false);
+      } else {
+        console.log("Network Error:", error.message);
+        toaster.create({
+          title: "Something went wrong. Please try again.",
+          type: "error",
+          duration: 3000,
+        });
+      }
+    }
   }
 
   return (
@@ -148,7 +180,7 @@ const Signup = () => {
           }
         >
           <Input
-            type={show ? "text" : "ConfirmPassword"}
+            type={show2 ? "text" : "password"}
             placeholder="Enter Your ConfirmPassword"
             onChange={(e) => setConfirmPassword(e.target.value)}
           />

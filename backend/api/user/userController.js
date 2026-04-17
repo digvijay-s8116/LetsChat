@@ -10,7 +10,7 @@ module.exports = {
       const { name, email, password, pic } = req.body;
 
       if (!name || !email || !password) {
-        res
+        return res
           .send(400)
           .json({ response: {}, responseMessage: "Give all the fields" });
       }
@@ -18,7 +18,8 @@ module.exports = {
       const userExists = await User.findOne({ email });
 
       if (userExists) {
-        res
+        console.log("email exists");
+        return res
           .status(400)
           .json({ response: {}, responseMessage: "Email Already Exists" });
       }
@@ -31,7 +32,8 @@ module.exports = {
       });
 
       if (newUser) {
-        res.status(200).json({
+        console.log("user created success", newUser);
+        return res.status(200).json({
           response: {
             _id: newUser._id,
             name: newUser.name,
@@ -44,7 +46,7 @@ module.exports = {
       }
     } catch (error) {
       console.log(error.message);
-      res.status(500).json({ responseMessage: error.message });
+      return res.status(500).json({ responseMessage: error.message });
     }
   },
 
