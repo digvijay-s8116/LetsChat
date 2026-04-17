@@ -1,5 +1,5 @@
 import { Input, VStack, Field, InputGroup, Button } from "@chakra-ui/react";
-import { toaster } from "../ui/toaster";
+import { toaster } from "../../ui/toaster";
 import axios from "axios";
 
 import { useState } from "react";
@@ -45,7 +45,7 @@ const Signup = () => {
 
         setPic(res.data.secure_url);
         setLoading(false);
-        console.log(res.data);
+        // console.log(res.data);
       } catch (error) {
         setLoading(false);
         console.log(error.message);
@@ -62,7 +62,46 @@ const Signup = () => {
     }
   }
 
-  function submitHandler() {}
+  async function submitHandler() {
+    setLoading(true);
+    console.log(name, email, password, confirmpassword);
+    if (!name || !email || !password || !confirmpassword) {
+      console.log("here");
+      toaster.create({
+        title: "Please fill all the fields",
+        status: "warning",
+        duration: 3000,
+      });
+
+      setLoading(false);
+      return;
+    }
+
+    // if (password !== confirmpassword) {
+    //   toaster.create({
+    //     title: "password and confirm password did not matched",
+    //     type: "warning",
+    //     duration: 3000,
+    //   });
+    //   setLoading(false);
+    //   return;
+    // }
+
+    // try {
+    //   let data = {
+    //     name,
+    //     email,
+    //     password,
+    //     confirmpassword,
+    //   };
+    //   let response = await axios.post("/api/user/register", { data });
+    //   console.log(response);
+    //   setLoading(false);
+    // } catch (error) {
+    //   console.log(error.message);
+    //   setLoading(false);
+    // }
+  }
 
   return (
     <VStack spacing="5px" color="black">
