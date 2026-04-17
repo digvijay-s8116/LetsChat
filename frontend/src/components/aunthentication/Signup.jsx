@@ -1,5 +1,6 @@
 import { Input, VStack, Field, InputGroup, Button } from "@chakra-ui/react";
-import { Toaster, toaster } from "../ui/toaster";
+import { toaster } from "../ui/toaster";
+import axios from "axios";
 
 import { useState } from "react";
 
@@ -12,9 +13,10 @@ const Signup = () => {
   const [show, setShow] = useState(false);
   const [show2, setShow2] = useState(false);
 
+  // this is used to create a loading at the time of image upload  in the signup button
   const [loading, setLoading] = useState(false);
 
-  function postDetails(pics) {
+  async function postDetails(pic) {
     setLoading(true);
     if (pic === undefined) {
       toaster.create({
@@ -23,8 +25,41 @@ const Signup = () => {
         type: "warning",
         duration: 3000,
       });
+      return;
     }
-    rr1u7dDTPQEpglXv02srpTDYMOk;
+
+    //  Here is the cloudanary code to upload picture and get url
+    const data = new FormData();
+    if (pic.type === "image/jpeg" || pic.type == "image/png") {
+      setLoading(true);
+
+      data.append("file", pic);
+      data.append("upload_preset", "Lets_Chat");
+      data.append("cloud_name", "digvijaysingh");
+
+      try {
+        const res = await axios.post(
+          "https://api.cloudinary.com/v1_1/digvijaysingh/image/upload",
+          data,
+        );
+
+        setPic(res.data.secure_url);
+        setLoading(false);
+        console.log(res.data);
+      } catch (error) {
+        setLoading(false);
+        console.log(error.message);
+      }
+    } else {
+      toaster.create({
+        title: "Select Image",
+        description: "Please upload a profile picture",
+        type: "warning",
+        duration: 3000,
+      });
+
+      setLoading(false);
+    }
   }
 
   function submitHandler() {}
@@ -97,6 +132,7 @@ const Signup = () => {
         width="100%"
         style={{ marginTop: 15 }}
         onClick={submitHandler}
+        loading={loading} //  isloading is old way use loading
       >
         Sign Up
       </Button>

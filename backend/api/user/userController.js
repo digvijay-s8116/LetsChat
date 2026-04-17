@@ -3,8 +3,10 @@ const bcrypt = require("bcrypt");
 const { getToken, hashPassword } = require("../../helper/util");
 
 module.exports = {
+  // this api is used for newuser Registration
   async userRegister(req, res) {
     try {
+      // console.log("sadfsadf");
       const { name, email, password, pic } = req.body;
 
       if (!name || !email || !password) {
@@ -16,7 +18,9 @@ module.exports = {
       const userExists = await User.findOne({ email });
 
       if (userExists) {
-        res.status(400).json({ response: {}, responseMessage: "User found" });
+        res
+          .status(400)
+          .json({ response: {}, responseMessage: "Email Already Exists" });
       }
 
       const newUser = await User.create({
@@ -44,6 +48,7 @@ module.exports = {
     }
   },
 
+  // this api is used for user login
   async userLogin(req, res) {
     try {
       const { email, password } = req.body;
@@ -61,7 +66,7 @@ module.exports = {
       if (!checkPassword) {
         return res
           .status(401)
-          .json({ response: {}, responseMessage: "Password not matched" });
+          .json({ response: {}, responseMessage: "Invalid Credentials" });
       }
 
       return res.status(200).json({
