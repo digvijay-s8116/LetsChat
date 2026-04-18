@@ -1,4 +1,4 @@
-const User = require("../../Models/user");
+const user = require("../../Models/user");
 const bcrypt = require("bcrypt");
 const { getToken, hashPassword } = require("../../helper/util");
 
@@ -15,7 +15,7 @@ module.exports = {
           .json({ response: {}, responseMessage: "Give all the fields" });
       }
 
-      const userExists = await User.findOne({ email });
+      const userExists = await user.findOne({ email });
 
       if (userExists) {
         console.log("email exists");
@@ -24,7 +24,7 @@ module.exports = {
           .json({ response: {}, responseMessage: "Email Already Exists" });
       }
 
-      const newUser = await User.create({
+      const newUser = await user.create({
         name,
         email,
         password: await hashPassword(password),
@@ -55,7 +55,7 @@ module.exports = {
     try {
       const { email, password } = req.body;
 
-      const userFound = await User.findOne({ email: email });
+      const userFound = await user.findOne({ email: email });
 
       if (!userFound) {
         return res
@@ -81,6 +81,43 @@ module.exports = {
       });
     } catch (error) {
       res.status(500).json({ response: {}, responseMessage: error.message });
+    }
+  },
+
+  // get query data from the params
+  async allUsers(req, res) {
+    try {
+      let search = req.query.search;
+
+      // write a query here like if use give a search query then search it in the name and email using regex and or
+      const query = search
+        ? {
+            $or: [
+              { name: { $regex: search, $options: "i" } },
+              { email: { $regex: search, $options: "i" } },
+            ],
+          }
+        : {};
+
+      console.log(query);
+      let allusers = await user
+        .find(query)
+        // it will remove the user who is searching.
+        // .find({ _id: { $ne: req.user._id } });
+
+      if (allusers.length == 0) {
+        return res
+          .status(200)
+          .json({ response: allusers, responseMessage: "No user found" });
+      }
+
+      return res
+        .status(200)
+        .json({ response: allusers, responseMessage: "User found" });
+    } catch (error) {
+      return res
+        .status(500)
+        .json({ response: {}, responseMessage: error.message });
     }
   },
 };
