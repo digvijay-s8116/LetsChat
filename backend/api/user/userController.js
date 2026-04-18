@@ -1,4 +1,4 @@
-const user = require("../../Models/user");
+const User = require("../../Models/User");
 const bcrypt = require("bcrypt");
 const { getToken, hashPassword } = require("../../helper/util");
 
@@ -15,7 +15,7 @@ module.exports = {
           .json({ response: {}, responseMessage: "Give all the fields" });
       }
 
-      const userExists = await user.findOne({ email });
+      const userExists = await User.findOne({ email });
 
       if (userExists) {
         console.log("email exists");
@@ -24,7 +24,7 @@ module.exports = {
           .json({ response: {}, responseMessage: "Email Already Exists" });
       }
 
-      const newUser = await user.create({
+      const newUser = await User.create({
         name,
         email,
         password: await hashPassword(password),
@@ -32,7 +32,7 @@ module.exports = {
       });
 
       if (newUser) {
-        console.log("user created success", newUser);
+        console.log("User created success", newUser);
         return res.status(200).json({
           response: {
             // _id: newUser._id,
@@ -50,12 +50,12 @@ module.exports = {
     }
   },
 
-  // this api is used for user login
+  // this api is used for User login
   async userLogin(req, res) {
     try {
       const { email, password } = req.body;
 
-      const userFound = await user.findOne({ email: email });
+      const userFound = await User.findOne({ email: email });
 
       if (!userFound) {
         return res
@@ -80,7 +80,7 @@ module.exports = {
         },
       });
     } catch (error) {
-      res.status(500).json({ response: {}, responseMessage: error.message });
+      return res.status(500).json({ response: {}, responseMessage: error.message });
     }
   },
 
@@ -99,16 +99,15 @@ module.exports = {
           }
         : {};
 
-      console.log(query);
-      let allusers = await user
-        .find(query)
-        // it will remove the user who is searching.
-        // .find({ _id: { $ne: req.user._id } });
+      console.log(req.user);
+      let allusers = await User.find(query)
+      .find({ _id: { $ne: req.user._id } });
+      // it will remove the User who is searching.
 
       if (allusers.length == 0) {
         return res
           .status(200)
-          .json({ response: allusers, responseMessage: "No user found" });
+          .json({ response: allusers, responseMessage: "No User found" });
       }
 
       return res
