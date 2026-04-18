@@ -131,10 +131,10 @@ module.exports = {
 
   async renameGroup(req, res) {
     try {
-      let { groupId, chatName } = req.body;
+      let { chatId, chatName } = req.body;
 
       const updateGroup = await Chat.findByIdAndUpdate(
-        groupId,
+        chatId,
         { chatName: chatName },
         { new: true },
       )
@@ -149,6 +149,34 @@ module.exports = {
         return res
           .status(200)
           .json({ response: updateGroup, responseMessage: "Group updated" });
+      }
+    } catch (error) {
+      return res
+        .status(500)
+        .json({ response: {}, responseMessage: error.message });
+    }
+  },
+
+  async addToGroup(req, res) {
+    try {
+      const { chatId, userId } = req.body;
+
+      const response = await Chat.findByIdAndUpdate(
+        chatId,
+        { $push: { users: userId } },
+        { new: true },
+      )
+        .populate("users", "-password")
+        .populate("groupAdmin", "-password");
+
+      if (response) {
+        return res
+          .status(200)
+          .json({ response: response, responseMessage: "user added" });
+      } else {
+        return res
+          .status(400)
+          .json({ response: {}, responseMessage: "Chat not found" });
       }
     } catch (error) {
       return res
