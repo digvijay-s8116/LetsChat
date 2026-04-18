@@ -13,14 +13,14 @@ module.exports = {
       }
 
       var isChat = await Chat.find({
-        isgroupChat: false,
+        isGroupChat: false,
         $and: [
-          { users: { $elementMatch: { $eq: req.user._id } } },
-          { users: { $elementMatch: { $eq: userId } } },
+          { users: { $elemMatch: { $eq: req.user._id } } },
+          { users: { $elemMatch: { $eq: userId } } },
         ],
       })
         .populate("users", "-password") // this will give all the data of the users
-        .populate("latestMessage");
+        .populate("latestMessages");
       //  this will give the details of the lestest message but we want thte sender details to so we go one step deep
 
       // this will populate by going to the path inside the latest message
@@ -35,7 +35,7 @@ module.exports = {
           .json({ response: isChat[0], responseMessage: "Chat found" });
       } else {
         var chatData = {
-          chatName: "sender", // since you are inetiating the chat so you will become the sender first
+          chatName: "sender", 
           isGroupChat: false, //  since it is a group chat so it will remain false
           users: [req.user._id, userId], //  it will store only two id since it is a one on one chat
         };
@@ -53,6 +53,7 @@ module.exports = {
         });
       }
     } catch (error) {
+      console.log(error);
       return res
         .status(500)
         .json({ response: {}, responseMessage: error.message });
