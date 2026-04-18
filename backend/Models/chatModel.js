@@ -12,11 +12,11 @@ const chatSchema = mongoose.Schema(
     ],
     latestMessages: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: Message,
+      ref: "Message",
     },
     groupAdmin: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: User,
+      ref: "User",
     },
   },
   {

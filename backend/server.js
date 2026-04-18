@@ -2,6 +2,8 @@ const express = require("express");
 const dotenv = require("dotenv");
 const connectDb = require("./config/connectDb");
 const userRoutes = require("./api/user/userRoutes");
+const chatRoutes =  require("./api/chat/chatRoutes")
+
 const { notFound, errorHandler } = require("./middleware/errorMiddleware");
 
 const app = express();
@@ -23,7 +25,12 @@ app.get("/", (req, res) => {
   res.send("server is up and running ");
 });
 
+
+// all api related to user and search user
 app.use("/api/user", userRoutes);
+
+// all api related to chats
+app.use("/api/chats",chatRoutes)
 
 // If not above route Found or have any error then check in the middle ware
 app.use(notFound); // this will handle any unknown URLs
