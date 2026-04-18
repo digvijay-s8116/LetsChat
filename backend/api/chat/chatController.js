@@ -128,4 +128,32 @@ module.exports = {
         .json({ response: {}, responseMessage: error.message });
     }
   },
+
+  async renameGroup(req, res) {
+    try {
+      let { groupId, chatName } = req.body;
+
+      const updateGroup = await Chat.findByIdAndUpdate(
+        groupId,
+        { chatName: chatName },
+        { new: true },
+      )
+        .populate("users", "-password")
+        .populate("groupAdmin", "-password");
+
+      if (!updateGroup) {
+        return res
+          .status(400)
+          .json({ response: {}, responseMessage: "Chat Not found" });
+      } else {
+        return res
+          .status(200)
+          .json({ response: updateGroup, responseMessage: "Group updated" });
+      }
+    } catch (error) {
+      return res
+        .status(500)
+        .json({ response: {}, responseMessage: error.message });
+    }
+  },
 };
