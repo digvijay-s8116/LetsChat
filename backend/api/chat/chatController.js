@@ -35,7 +35,7 @@ module.exports = {
           .json({ response: isChat[0], responseMessage: "Chat found" });
       } else {
         var chatData = {
-          chatName: "sender", 
+          chatName: "sender",
           isGroupChat: false, //  since it is a group chat so it will remain false
           users: [req.user._id, userId], //  it will store only two id since it is a one on one chat
         };
@@ -60,5 +60,28 @@ module.exports = {
     }
   },
 
-  async fetchChat() {},
+  async fetchChat(req, res) {
+    try {
+      let response = await Chat.find({
+        users: { $elemMatch: { $eq: req.user._id } },
+      })
+        .populate("users", "-password")
+        .populate("groupAdmin", "-password")
+        .populate("latestMessages")
+        .sort({ updatedAt: -1 });
+
+      response = await User.populate(response, {
+        path: "latestMessage.sender",
+        select: "name pic email",
+      });
+
+      return res
+        .status(200)
+        .json({ response: response, responseMessage: "Chat Found Success" });
+    } catch (error) {
+      return res
+        .status(500)
+        .json({ response: {}, responseMessage: error.message });
+    }
+  },
 };
