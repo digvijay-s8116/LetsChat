@@ -84,4 +84,48 @@ module.exports = {
         .json({ response: {}, responseMessage: error.message });
     }
   },
+
+  async createGroupChat(req, res) {
+    try {
+      let { users, name } = req.body;
+
+      if (!users || !name) {
+        return res.status(400).josn({
+          response: {},
+          responseMessage: "Please provide all the fields",
+        });
+      }
+
+      users = JSON.parse(users); // to get users in the array formate
+
+      if (users.length < 2) {
+        return res.status(400).json({
+          response: {},
+          responseMessage: "More than 2 users are required to create a group",
+        });
+      }
+      // this will add the current user that is loged in the the group
+      users.push(req.user);
+
+      const groupChat = await Chat.create({
+        chatName: name,
+        users: users,
+        isgroupChat: true,
+        groupAdmin: req.user._id, // give all  the ides even if you give full object it will extract the id but best practice to give id
+      });
+
+      const fullGroupChat = await Chat.findOne({ _id: groupChat._id })
+        .populate("users", "-password")
+        .populate("groupAdmin", "-password");
+
+      return res.status(200).json({
+        response: fullGroupChat,
+        responseMessage: "group created success",
+      });
+    } catch (error) {
+      return res
+        .status(500)
+        .json({ response: {}, responseMessage: error.message });
+    }
+  },
 };
