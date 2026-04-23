@@ -184,4 +184,32 @@ module.exports = {
         .json({ response: {}, responseMessage: error.message });
     }
   },
+
+  async removeFromGroup(req, res) {
+    try {
+      const { chatId, userId } = req.body;
+
+      const response = await Chat.findByIdAndUpdate(
+        chatId,
+        { $pull: { users: userId } },
+        { new: true },
+      )
+        .populate("users", "-password")
+        .populate("groupAdmin", "-password");
+
+      if (response) {
+        return res
+          .status(200)
+          .json({ response: response, responseMessage: "user removed" });
+      } else {
+        return res
+          .status(400)
+          .json({ response: {}, responseMessage: "Chat not found" });
+      }
+    } catch (error) {
+      return res
+        .status(500)
+        .json({ response: {}, responseMessage: error.message });
+    }
+  },
 };
