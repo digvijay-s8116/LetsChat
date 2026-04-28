@@ -76,11 +76,14 @@ module.exports = {
           _id: userFound._id,
           name: userFound.name,
           email: userFound.email,
+          pic: userFound.pic,
           token: getToken(userFound),
         },
       });
     } catch (error) {
-      return res.status(500).json({ response: {}, responseMessage: error.message });
+      return res
+        .status(500)
+        .json({ response: {}, responseMessage: error.message });
     }
   },
 
@@ -100,8 +103,9 @@ module.exports = {
         : {};
 
       console.log(req.user);
-      let allusers = await User.find(query)
-      .find({ _id: { $ne: req.user._id } });
+      let allusers = await User.find(query).find({
+        _id: { $ne: req.user._id },
+      });
       // it will remove the User who is searching.
 
       if (allusers.length == 0) {

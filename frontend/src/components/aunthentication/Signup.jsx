@@ -96,6 +96,7 @@ const Signup = () => {
         email,
         password,
         confirmpassword,
+        pic
       };
 
       // give a config
