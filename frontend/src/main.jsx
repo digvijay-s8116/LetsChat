@@ -7,11 +7,11 @@ import { ChakraProvider, defaultSystem } from "@chakra-ui/react";
 import ChatProvider from "./context/ChatProvider.jsx";
 
 createRoot(document.getElementById("root")).render(
-  <ChatProvider>
-    <BrowserRouter>
+  <BrowserRouter>
+    <ChatProvider>
       <ChakraProvider value={defaultSystem}>
         <App />
       </ChakraProvider>
-    </BrowserRouter>
-  </ChatProvider>,
+    </ChatProvider>
+  </BrowserRouter>,
 );
