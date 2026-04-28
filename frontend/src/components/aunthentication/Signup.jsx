@@ -1,5 +1,5 @@
 import { Input, VStack, Field, InputGroup, Button } from "@chakra-ui/react";
-import { toaster } from "../../ui/toaster";
+import { toaster } from "../ui/toaster";
 import axios from "axios";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
