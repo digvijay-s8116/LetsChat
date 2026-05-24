@@ -5,6 +5,7 @@ import { Avatar } from "../ui/avatar";
 import React, { useState } from "react";
 import { ChatState } from "../../context/ChatProvider";
 import ProfileModel from "./ProfileModel";
+import { useNavigate } from "react-router-dom";
 
 const SideDrawer = () => {
   const [search, setSearch] = useState("");
@@ -13,6 +14,12 @@ const SideDrawer = () => {
   const [loadingChat, setLoadingChat] = useState(false);
 
   const { user } = ChatState();
+  const navigate = useNavigate();
+
+  function logOutHandler() {
+    localStorage.removeItem("userInfo");
+    navigate("/");
+  }
 
   return (
     <Box
@@ -69,7 +76,9 @@ const SideDrawer = () => {
             </ProfileModel>
 
             <Menu.Separator />
-            <Menu.Item value="logout">Logout</Menu.Item>
+            <Menu.Item onClick={logOutHandler} value="logout">
+              Logout
+            </Menu.Item>
           </Menu.Content>
         </Menu.Root>
       </Box>
